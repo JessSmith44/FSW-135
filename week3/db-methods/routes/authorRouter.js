@@ -38,6 +38,20 @@ authorRouter.post('/manyauthors', (req, res, next) => {
   })
 })
 
+authorRouter.get('/search', (req, res, next) => {
+  const { author } = req.query
+  const pattern = new RegExp(author)
+  Author.find (
+    { name: { $regex: pattern, $options: 'i'}},
+    (err, authors) => {
+      if(err){
+        res.status(500)
+        return next(err)
+      }
+      return res.status(201).send(authors)
+    }
+  )
+})
 
 
 module.exports = authorRouter
